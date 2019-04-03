@@ -41,6 +41,22 @@ netMain = None
 metaMain = None
 altNames = None
 
+def sendIOMessage(image):
+    try:
+        client = IoFogClient()
+    except IoFogException as e:
+    #client creation failed, e contains description
+        print(e)
+        return -1
+
+    msg = IoMessage()
+    msg.infotype = "JIRA_ESTIMATES"
+    msg.infoformat = "JIRA_JSON"
+    msgcontent = image
+
+    msg.contentdata = msgcontent
+
+    client.post_message_via_socket(msg)
 
 def YOLO():
 
@@ -105,11 +121,13 @@ def YOLO():
 
         darknet.copy_image_from_bytes(darknet_image,frame_resized.tobytes())
 
-        detections = darknet.detect_image(netMain, metaMain, darknet_image, thresh=0.25)
+        detections = darknet.detect_image(netMain, metaMain, darknet_image, thresh=0.85)
         image = cvDrawBoxes(detections, frame_resized)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        if image:
+            sendIOMessage(image)
         print(1/(time.time()-prev_time))
-        cv2.imshow('Demo', image)
+        # cv2.imshow('Demo', image)
         cv2.waitKey(3)
     cap.release()
     out.release()
