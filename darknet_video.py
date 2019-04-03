@@ -131,8 +131,8 @@ def YOLO():
         if detection_locations:
             for i in range(detection_locations):
                 sendIOMessage("location", detection_locations[i])
-        if image:
-            sendIOMessage("image", image)
+        # if image:
+        #     sendIOMessage("image", image)
         print(1/(time.time()-prev_time))
         # cv2.imshow('Demo', image)
         cv2.waitKey(3)
