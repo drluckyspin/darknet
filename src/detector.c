@@ -1476,8 +1476,8 @@ void test_detector(char *datacfg, char *cfgfile, char *weightfile, char *filenam
 
 void run_detector(int argc, char **argv)
 {
-    int dont_show = find_arg(argc, argv, "-dont_show", 1);
-    int show = find_arg(argc, argv, "-show", 0);
+    int dont_show = find_arg(argc, argv, "-dont_show");
+    int show = find_arg(argc, argv, "-show");
     int calc_map = find_arg(argc, argv, "-map");
     int map_points = find_int_arg(argc, argv, "-points", 0);
     check_mistakes = find_arg(argc, argv, "-check_mistakes");
