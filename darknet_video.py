@@ -19,6 +19,7 @@ def convertBack(x, y, w, h):
 
 
 def cvDrawBoxes(detections, img):
+    detection_locations = []
     for detection in detections:
         x, y, w, h = detection[2][0],\
             detection[2][1],\
@@ -34,14 +35,15 @@ def cvDrawBoxes(detections, img):
                     " [" + str(round(detection[1] * 100, 2)) + "]",
                     (pt1[0], pt1[1] - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
                     [0, 255, 0], 2)
-    return img
+        detection_locations.append((pt1, pt2))
+    return img, detection_locations
 
 
 netMain = None
 metaMain = None
 altNames = None
 
-def sendIOMessage(image):
+def sendIOMessage(type, data):
     try:
         client = IoFogClient()
     except IoFogException as e:
@@ -50,9 +52,9 @@ def sendIOMessage(image):
         return -1
 
     msg = IoMessage()
-    msg.infotype = "JIRA_ESTIMATES"
-    msg.infoformat = "JIRA_JSON"
-    msgcontent = image
+    msg.infotype = type
+    msg.infoformat = type
+    msgcontent = data
 
     msg.contentdata = msgcontent
 
@@ -122,10 +124,15 @@ def YOLO():
         darknet.copy_image_from_bytes(darknet_image,frame_resized.tobytes())
 
         detections = darknet.detect_image(netMain, metaMain, darknet_image, thresh=0.85)
-        image = cvDrawBoxes(detections, frame_resized)
+        data = cvDrawBoxes(detections, frame_resized)
+        image = data[0]
+        detection_locations = data[1]
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        if detection_locations:
+            for i in range(detection_locations):
+                sendIOMessage("location", detection_locations[i])
         if image:
-            sendIOMessage(image)
+            sendIOMessage("image", image)
         print(1/(time.time()-prev_time))
         # cv2.imshow('Demo', image)
         cv2.waitKey(3)
