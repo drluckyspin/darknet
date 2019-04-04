@@ -58,7 +58,7 @@ WORKDIR OpenCV
 
 COPY . /usr/src/app
 
-ADD darknet/ darknet/
+RUN git clone https://github.com/Xaoc000/darknet.git
 
 WORKDIR darknet
 
