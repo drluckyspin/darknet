@@ -35,7 +35,7 @@ def cvDrawBoxes(detections, img):
                     " [" + str(round(detection[1] * 100, 2)) + "]",
                     (pt1[0], pt1[1] - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
                     [0, 255, 0], 2)
-        detection_locations.append((pt1, pt2))
+        detection_locations.append([pt1, pt2])
     return img, detection_locations
 
 
@@ -106,9 +106,9 @@ def YOLO():
                             format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink")
     cap.set(3, 1280)
     cap.set(4, 720)
-    out = cv2.VideoWriter(
-        "output.avi", cv2.VideoWriter_fourcc(*"MJPG"), 10.0,
-        (darknet.network_width(netMain), darknet.network_height(netMain)))
+    # out = cv2.VideoWriter(
+    #     "output.avi", cv2.VideoWriter_fourcc(*"MJPG"), 10.0,
+    #     (darknet.network_width(netMain), darknet.network_height(netMain)))
     print("Starting the YOLO loop...")
 
     # Create an image we reuse for each detect
@@ -131,10 +131,12 @@ def YOLO():
         detection_locations = data[1]
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         if detection_locations:
-            for i in range(detection_locations):
-                sendIOMessage("location", detection_locations[i])
-        # if image:
-        #     sendIOMessage("image", image)
+            # This is sending a list of tuples of tuples, so to access you need to first access the list with
+            # detection_locations[0], That will give you another tuple with two entries, each a tuple
+            for detection in detection_locations:
+                sendIOMessage("location", detection)
+        if image:
+            sendIOMessage("image", image)
         print(1/(time.time()-prev_time))
         # cv2.imshow('Demo', image)
         cv2.waitKey(3)
