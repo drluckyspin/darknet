@@ -1,7 +1,9 @@
-FROM python:3.5.7
+FROM ubuntu:18.04
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
+
+ENV DEBIAN_FRONTEND noninteractive
 
 # Various Python and C/build deps
 RUN apt-get update && apt-get install -y \
@@ -15,7 +17,6 @@ RUN apt-get update && apt-get install -y \
     python-dev \
     python-opencv \
     libopencv-dev \
-    libav-tools  \
     libjpeg-dev \
     libpng-dev \
     libtiff-dev \
@@ -25,7 +26,6 @@ RUN apt-get update && apt-get install -y \
     libatlas-base-dev \
     gfortran \
     webp \
-    python-opencv \
     qt5-default \
     libvtk6-dev \
     zlib1g-dev
@@ -53,17 +53,5 @@ RUN mkdir -p ~/opencv cd ~/opencv && \
 
 WORKDIR OpenCV
 
-#COPY requirements.txt /usr/src/app/
-#RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /usr/src/app
-
-RUN git clone https://github.com/Xaoc000/darknet.git
-
-WORKDIR darknet
-
-RUN if command -v nvcc ; then export GPU=1; else export GPU=0; fi
-
-RUN GPU=$GPU OPENCV=1 CUDNN=$GPU make -j
-
-ENTRYPOINT ["sh", "-c", "python3 darknet_video.py"]

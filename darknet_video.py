@@ -134,9 +134,10 @@ def YOLO():
             # This is sending a list of tuples of tuples, so to access you need to first access the list with
             # detection_locations[0], That will give you another tuple with two entries, each a tuple
             for detection in detection_locations:
+
                 sendIOMessage("location", detection)
-        if image:
-            sendIOMessage("image", image)
+        # if image:
+        #    sendIOMessage("image", image)
         print(1/(time.time()-prev_time))
         # cv2.imshow('Demo', image)
         cv2.waitKey(3)
