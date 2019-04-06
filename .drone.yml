@@ -7,8 +7,8 @@ platform:
   arch: arm64
 
 steps:
-- name: docker
-  image: plugins/docker
+- name: Docker
+  image: docker
   commands:
   - echo Building on ARM64
   - docker build -t darknet-arm .
