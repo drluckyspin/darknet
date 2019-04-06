@@ -1,0 +1,14 @@
+---
+kind: pipeline
+name: Darknet-on-arm64
+
+platform:
+  os: linux
+  arch: arm64
+
+steps:
+- name: en
+  image: alpine
+  commands:
+  - echo Building on ARM64
+  - docker build -t Dockerfile
