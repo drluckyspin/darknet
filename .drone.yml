@@ -7,8 +7,8 @@ platform:
   arch: arm64
 
 steps:
-- name: en
-  image: alpine
+- name: docker
+  image: plugins/docker
   commands:
   - echo Building on ARM64
   - docker build -t Dockerfile
