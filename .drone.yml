@@ -12,3 +12,4 @@ steps:
   commands:
   - echo Building on ARM64
   - docker build -t Dockerfile
+  - echo Add push to DH here..
