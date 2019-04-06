@@ -11,5 +11,5 @@ steps:
   image: plugins/docker
   commands:
   - echo Building on ARM64
-  - docker build -t Dockerfile
+  - docker build -t darknet-arm
   - echo Add push to DH here..
