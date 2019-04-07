@@ -39,6 +39,8 @@ RUN apt-get update && apt-get install -y \
     python3-pip \
     python-dev
 
+RUN pip3 install numpy matplotlib
+
 # Install Open CV - Warning, this takes absolutely forever
 RUN mkdir -p ~/opencv cd ~/opencv && \
     wget https://github.com/Itseez/opencv/archive/3.4.0.zip && \
@@ -68,7 +70,7 @@ RUN git clone https://github.com/Xaoc000/darknet.git
 
 RUN pip3 install --upgrade pip
 
-RUN pip3 install iofog-python-sdk ws4py numpy matplotlib
+RUN pip3 install iofog-python-sdk ws4py
 
 WORKDIR darknet
 
